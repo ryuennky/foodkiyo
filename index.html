@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiyo's Royal Menu 👑🎀</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: #4a303b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 190, 215, 0.55), transparent 28%),
+                radial-gradient(circle at 85% 75%, rgba(248, 178, 205, 0.45), transparent 30%),
+                linear-gradient(135deg, #fffafb, #fff0f6, #fce4ed);
+        }
+
+        /* ================= FLOATING BACKGROUND ================= */
+        .background-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            color: rgba(214, 110, 151, 0.45);
+            animation: floatParticle linear infinite;
+        }
+
+        .particle:nth-child(1) { left: 8%; top: 20%; font-size: 20px; animation-duration: 7s; }
+        .particle:nth-child(2) { left: 18%; top: 75%; font-size: 14px; animation-duration: 9s; }
+        .particle:nth-child(3) { left: 75%; top: 18%; font-size: 18px; animation-duration: 8s; }
+        .particle:nth-child(4) { left: 88%; top: 65%; font-size: 24px; animation-duration: 10s; }
+        .particle:nth-child(5) { left: 50%; top: 90%; font-size: 13px; animation-duration: 8s; }
+        .particle:nth-child(6) { left: 35%; top: 8%; font-size: 17px; animation-duration: 11s; }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(20px) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            50% { transform: translateY(-40px) rotate(20deg); }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-100px) rotate(-20deg); opacity: 0; }
+        }
+
+        /* ================= MAIN CARD ================= */
+        .card {
+            width: 95%;
+            max-width: 900px;
+            max-height: 92vh;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+            padding: 32px;
+            border-radius: 30px;
+            border: 1px solid rgba(213, 126, 158, 0.35);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 246, 250, 0.94));
+            box-shadow: 0 30px 80px rgba(139, 70, 99, 0.18), inset 0 0 30px rgba(255, 191, 215, 0.15);
+            backdrop-filter: blur(12px);
+            animation: cardEntrance 0.9s ease;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            border-radius: 30px 30px 0 0;
+            background: linear-gradient(90deg, #e99ab8, #f5bfd2, #d979a0, #f5bfd2, #e99ab8);
+            background-size: 200%;
+            animation: royalShimmer 5s linear infinite;
+        }
+
+        @keyframes royalShimmer {
+            from { background-position: 0%; }
+            to { background-position: 200%; }
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #f1d6e0;
+            color: #9b7181;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .status {
+            color: #d86d96;
+            font-weight: bold;
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ================= SCREENS ================= */
+        .screen {
+            min-height: 470px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: screenEnter 0.6s ease;
+        }
+
+        #questionScreen,
+        #menuScreen,
+        #checkoutScreen,
+        #finalScreen {
+            display: none;
+        }
+
+        @keyframes screenEnter {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= ICON ================= */
+        .big-icon {
+            font-size: 70px;
+            margin-bottom: 18px;
+            filter: drop-shadow(0 8px 8px rgba(190, 88, 128, 0.15));
+            animation: royalFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes royalFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* ================= START SCREEN ================= */
+        .start-title {
+            font-size: 44px;
+            color: #553640;
+            margin-bottom: 14px;
+            font-weight: normal;
+        }
+
+        .start-title span {
+            color: #d86d96;
+            font-style: italic;
+        }
+
+        .start-text {
+            color: #8c6976;
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        /* ================= BUTTONS ================= */
+        .main-button {
+            position: relative;
+            border: none;
+            padding: 15px 38px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #e88aaa, #d96d97);
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(211, 99, 142, 0.25);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .main-button::after {
+            content: "✦";
+            position: absolute;
+            right: 12px;
+            top: 5px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .main-button:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(211, 99, 142, 0.32);
+        }
+
+        .main-button:hover::after {
+            opacity: 1;
+            transform: rotate(20deg);
+        }
+
+        .main-button:active {
+            transform: scale(0.97);
+        }
+
+        /* ================= QUESTION ================= */
+        .request-label {
+            color: #d86d96;
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin-bottom: 22px;
+        }
+
+        #question {
+            max-width: 680px;
+            font-size: 31px;
+            line-height: 1.5;
+            color: #553640;
+            margin-bottom: 40px;
+            animation: questionAppear 0.5s ease;
+        }
+
+        @keyframes questionAppear {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .button-area {
+            width: 100%;
+            height: 170px;
+            position: relative;
+        }
+
+        .answer-button {
+            border: none;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #yesButton {
+            position: absolute;
+            left: calc(50% - 115px);
+            top: 0;
+            background: linear-gradient(135deg, #e88aaa, #d96d97);
+            color: white;
+            box-shadow: 0 8px 20px rgba(211, 99, 142, 0.22);
+            transition: transform 0.25s;
+        }
+
+        #yesButton:hover {
+            transform: scale(1.1) rotate(-2deg);
+        }
+
+        #noButton {
+            position: absolute;
+            left: calc(50% + 15px);
+            top: 0;
+            background: white;
+            color: #956a7a;
+            border: 1px solid #e7c8d5;
+            transition: left 0.25s ease, top 0.25s ease, transform 0.2s;
+        }
+
+        /* ================= MENU ================= */
+        .menu-title {
+            font-size: 38px;
+            color: #d86d96;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+
+        .menu-subtitle {
+            color: #94717e;
+            font-size: 15px;
+            margin-bottom: 22px;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .category-button {
+            border: 1px solid #e5c4d2;
+            background: rgba(255, 255, 255, 0.8);
+            color: #8e5f70;
+            padding: 9px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: 0.25s;
+        }
+
+        .category-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-button.active {
+            background: #df7b9e;
+            color: white;
+            border-color: #df7b9e;
+            box-shadow: 0 5px 15px rgba(218, 111, 151, 0.2);
+        }
+
+        /* ================= FOOD GRID ================= */
+        .food-grid {
+            width: 100%;
+            max-height: 315px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 13px;
+            padding: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: #e4a1b9 #fff3f7;
+        }
+
+        .food-item {
+            position: relative;
+            background: linear-gradient(145deg, #ffffff, #fff7fa);
+            border: 1px solid #efd4de;
+            border-radius: 20px;
+            padding: 17px;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.25s, box-shadow 0.25s, border 0.25s;
+        }
+
+        .food-item:hover {
+            transform: translateY(-6px) rotate(-1deg);
+            border-color: #e395b0;
+            box-shadow: 0 12px 25px rgba(197, 103, 139, 0.15);
+        }
+
+        .food-image {
+            width: 100%;
+            height: 135px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 11px;
+            display: block;
+            box-shadow: 0 6px 15px rgba(120, 60, 90, 0.12);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .food-item:hover .food-image {
+            transform: scale(1.04);
+            filter: brightness(1.06);
+        }
+
+        .food-name {
+            font-weight: bold;
+            color: #573b45;
+            margin-bottom: 5px;
+        }
+
+        .food-price {
+            color: #d86d96;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .food-item.selected {
+            border: 2px solid #dc789d;
+            background: #fff0f5;
+            transform: translateY(-3px);
+        }
+
+        .food-item.selected::after {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #df7b9e;
+            color: white;
+            font-family: Arial, sans-serif;
+            animation: checkPop 0.3s ease;
+        }
+
+        @keyframes checkPop {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        /* ================= CART ================= */
+        .cart-box {
+            width: 100%;
+            margin-top: 17px;
+            padding: 15px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #fff5f8, #fffafb);
+            border: 1px solid #eed3dd;
+            text-align: left;
+            box-shadow: inset 0 0 20px rgba(235, 145, 176, 0.06);
+        }
+
+        .cart-title {
+            color: #d86d96;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .cart-items {
+            color: #80606c;
+            font-size: 14px;
+            max-height: 70px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .cart-total {
+            margin-top: 7px;
+            color: #573b45;
+            font-weight: bold;
+        }
+
+        /* ================= CHECKOUT ================= */
+        .checkout-title {
+            font-size: 38px;
+            color: #d86d96;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        .order-list {
+            width: 100%;
+            max-width: 600px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 14px;
+            margin-bottom: 18px;
+            border-radius: 20px;
+            background: #fff7fa;
+            border: 1px solid #efd3de;
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f2dfe6;
+            color: #674b57;
+        }
+
+        .order-row:last-child {
+            border-bottom: none;
+        }
+
+        .checkout-total {
+            font-size: 22px;
+            font-weight: bold;
+            color: #573b45;
+            margin-bottom: 22px;
+        }
+
+        /* ================= FINAL ================= */
+        .final-title {
+            color: #d86d96;
+            font-size: 40px;
+            font-weight: normal;
+            margin-bottom: 20px;
+            animation: finalReveal 0.8s ease;
+        }
+
+        @keyframes finalReveal {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .final-text {
+            color: #866571;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .final-pay {
+            position: relative;
+            font-size: 27px;
+            font-weight: bold;
+            color: #563742;
+            padding: 20px 30px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #fff0f5, #ffe4ed);
+            border: 2px dashed #df7b9e;
+            box-shadow: 0 10px 30px rgba(209, 106, 145, 0.15);
+            animation: payReveal 1s ease, gentlePulse 2s ease-in-out 1s infinite;
+        }
+
+        @keyframes payReveal {
+            from { opacity: 0; transform: translateY(20px) rotate(-3deg); }
+            to { opacity: 1; transform: translateY(0) rotate(0); }
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.025); }
+        }
+
+        /* ================= MOBILE ================= */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .card { width: 97%; padding: 22px 16px; max-height: 95vh; }
+            .top-bar { font-size: 9px; letter-spacing: 1px; }
+            .screen { min-height: 450px; }
+            .start-title { font-size: 33px; }
+            .start-text { font-size: 15px; }
+            #question { font-size: 23px; }
+            .menu-title { font-size: 29px; }
+            .food-grid { grid-template-columns: repeat(2, 1fr); max-height: 330px; gap: 9px; }
+            .food-item { padding: 12px; }
+            .food-image { height: 105px; }
+            .food-name { font-size: 13px; }
+            .food-price { font-size: 12px; }
+            .category-button { padding: 8px 11px; font-size: 12px; }
+            .final-title { font-size: 30px; }
+            .final-pay { font-size: 21px; padding: 17px 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-particles">
+        <div class="particle">♡</div>
+        <div class="particle">✦</div>
+        <div class="particle">♡</div>
+        <div class="particle">✧</div>
+        <div class="particle">♡</div>
+        <div class="particle">✦</div>
+    </div>
+
+    <div class="card">
+
+        <div class="top-bar">
+            <span>A LITTLE SOMETHING FOR KIYO 🎀</span>
+            <span class="status">● ONLINE</span>
+        </div>
+
+        <div id="startScreen" class="screen">
+            <div class="big-icon">👑</div>
+            <h1 class="start-title">Hey <span>Kiyo</span> :)</h1>
+            <p class="start-text">
+                I have prepared something<br>very important for you...<br><br>
+                Don't worry. It's not a proposal. 😭<br>Probably.
+            </p>
+            <button class="main-button" id="startButton">enter the royal menu 👑</button>
+        </div>
+
+        <div id="questionScreen" class="screen">
+            <div class="request-label">A VERY IMPORTANT REQUEST 🎀</div>
+            <h2 id="question">Kiyo, do you wanna pick some food with me? 🥺</h2>
+            <div class="button-area">
+                <button class="answer-button" id="yesButton">YES :)</button>
+                <button class="answer-button" id="noButton">NO 😭</button>
+            </div>
+        </div>
+
+        <div id="menuScreen" class="screen">
+            <div class="big-icon">👑🍽️</div>
+            <h1 class="menu-title">The Royal Menu</h1>
+            <p class="menu-subtitle">Your Highness may choose whatever she desires. 🎀</p>
+
+            <div class="category-buttons">
+                <button class="category-button active" onclick="showCategory('all', this)">ALL ✨</button>
+                <button class="category-button" onclick="showCategory('pizza', this)">🍕</button>
+                <button class="category-button" onclick="showCategory('sushi', this)">🍣</button>
+                <button class="category-button" onclick="showCategory('chicken', this)">🍗</button>
+                <button class="category-button" onclick="showCategory('filipino', this)">🇵🇭</button>
+                <button class="category-button" onclick="showCategory('rice', this)">🍚</button>
+                <button class="category-button" onclick="showCategory('drinks', this)">🥤🍵</button>
+                <button class="category-button" onclick="showCategory('dessert', this)">🍰</button>
+            </div>
+
+            <div class="food-grid" id="foodGrid"></div>
+
+            <div class="cart-box">
+                <div class="cart-title">🛒 Royal Selection</div>
+                <div class="cart-items" id="cartItems">Nothing yet...</div>
+                <div class="cart-total" id="cartTotal">Total items: 0</div>
+            </div>
+
+            <br>
+            <button class="main-button" id="checkoutButton">I'VE CHOSEN EVERYTHING 👑</button>
+        </div>
+
+        <div id="checkoutScreen" class="screen">
+            <div class="big-icon">🎀🛒</div>
+            <h1 class="checkout-title">Royal Order</h1>
+            <div class="order-list" id="orderList"></div>
+            <div class="checkout-total" id="checkoutTotal"></div>
+            <button class="main-button" id="confirmButton">CONFIRM EVERYTHING ✨</button>
+        </div>
+
+        <div id="finalScreen" class="screen">
+            <h1 class="final-title">ROYAL ORDER COMPLETE! 🎀</h1>
+            <p class="final-text">
+                Excellent choices, Your Highness. 😌<br><br>
+                The royal kitchen has received your order.<br><br>
+                Unfortunately...
+            </p>
+            <div class="final-pay">you pay for all of it 😭💸</div>
+            <br>
+            <p class="final-text">i love you so much 👑<br>hehe :3</p>
+        </div>
+
+    </div>
+
+    <script>
+        const startScreen = document.getElementById("startScreen");
+        const questionScreen = document.getElementById("questionScreen");
+        const menuScreen = document.getElementById("menuScreen");
+        const checkoutScreen = document.getElementById("checkoutScreen");
+        const finalScreen = document.getElementById("finalScreen");
+
+        const startButton = document.getElementById("startButton");
+        const yesButton = document.getElementById("yesButton");
+        const noButton = document.getElementById("noButton");
+        const question = document.getElementById("question");
+        const buttonArea = document.querySelector(".button-area");
+
+        const foodGrid = document.getElementById("foodGrid");
+        const cartItems = document.getElementById("cartItems");
+        const cartTotal = document.getElementById("cartTotal");
+        const checkoutButton = document.getElementById("checkoutButton");
+
+        const orderList = document.getElementById("orderList");
+        const checkoutTotal = document.getElementById("checkoutTotal");
+        const confirmButton = document.getElementById("confirmButton");
+
+        let noCount = 0;
+        let selectedItems = [];
+
+        const questions = [
+            "Kiyo, do you wanna pick some food with me? 🥺",
+            "Why not? 🥲",
+            "Do you really not want food? 🥺",
+            "But food... 😭",
+            "Kiyo please, I promise it'll be good. 😭",
+            "Come on... pick some food with me? 🍕",
+            "You're really saying no to FOOD? 😭",
+            "Okay but pleaseeee. 🥺",
+            "Just pick something. I'll let you choose. 🙄",
+            "Kiyo... you're making this unnecessarily difficult. 😭",
+            "One little yes won't hurt. 🎀",
+            "PLEASE YOUR HIGHNESS. 😭👑"
+        ];
+
+        const foods = [
+            /* PIZZA */
+            { name: "BBQ Chicken Pizza", emoji: "🍗", price: 349, category: "pizza", image: "images/BBQ Chicken Pizza.jpg" },
+            { name: "Cheese Pizza", emoji: "🧀", price: 249, category: "pizza", image: "images/cheese pizza.jpg" },
+            { name: "Hawaiian Pizza", emoji: "🍍", price: 299, category: "pizza", image: "images/hawaain pizza.jpg" },
+            { name: "Mushroom Pizza", emoji: "🍄", price: 289, category: "pizza", image: "images/Mushroom Pizza.jpg" },
+
+            /* SUSHI */
+            { name: "California Roll", emoji: "🍣", price: 189, category: "sushi", image: "images/california roll.jpg" },
+            { name: "Salmon Maki", emoji: "🍣", price: 229, category: "sushi", image: "images/Salmon Maki.jpg" },
+
+            /* CHICKEN */
+            { name: "Buffalo Wings", emoji: "🌶️", price: 249, category: "chicken", image: "images/bufallo wings.jpg" },
+            { name: "Chicken Sandwich", emoji: "🥪", price: 179, category: "chicken", image: "images/chicken sandwich.jpg" },
+            { name: "Chicken Sisig", emoji: "🍗", price: 179, category: "chicken", image: "images/chicken sisig.jpg" },
+
+            /* FILIPINO */
+            { name: "Beef Pares", emoji: "🍲", price: 169, category: "filipino", image: "images/Beef Pares.jpg" },
+            { name: "Chicken Inasal", emoji: "🍗", price: 189, category: "filipino", image: "images/Chicken Inasal.jpg" },
+            { name: "Halo-Halo", emoji: "🍧", price: 119, category: "filipino", image: "images/Halo-Halo.jpg" },
+            { name: "Kare-Kare", emoji: "🥘", price: 249, category: "filipino", image: "images/Kare-Kare.jpg" },
+            { name: "Lechon Kawali", emoji: "🥩", price: 229, category: "filipino", image: "images/lechon kawali.jpg" },
+            { name: "Lumpia", emoji: "🥟", price: 129, category: "filipino", image: "images/lumpi.jpg" },
+            { name: "Pork Sinigang", emoji: "🍲", price: 219, category: "filipino", image: "images/Pork Sinigang.jpg" },
+
+            /* FRIED RICE */
+            { name: "Garlic Fried Rice", emoji: "🍚", price: 99, category: "rice", image: "images/garlic fried rice.jpg" },
+            { name: "Yang Chow Fried Rice", emoji: "🍚", price: 159, category: "rice", image: "images/Yang Chow Fried Rice.jpg" },
+
+            /* DRINKS & MATCHA */
+            { name: "Coca-Cola", emoji: "🥤", price: 69, category: "drinks", image: "images/Coca-Cola.jpg" },
+            { name: "Sprite", emoji: "🥤", price: 69, category: "drinks", image: "images/Sprite.jpg" },
+            { name: "Iced Tea", emoji: "🧋", price: 79, category: "drinks", image: "images/Iced Tea.jpg" },
+            { name: "Milk Tea", emoji: "🧋", price: 129, category: "drinks", image: "images/Milk Tea.webp" },
+            { name: "Strawberry Milk", emoji: "🍓", price: 139, category: "drinks", image: "images/Strawberry Milk.jpg" },
+            { name: "Hot Ceramic Matcha", emoji: "🍵", price: 139, category: "drinks", image: "images/Hot Ceramic Matcha.jpg" },
+            { name: "Mango Matcha Latte", emoji: "🥭", price: 169, category: "drinks", image: "images/Mango Matcha Latte.jpg" },
+            { name: "Matcha Espresso Tonic", emoji: "☕", price: 179, category: "drinks", image: "images/Matcha Espresso Tonic.jpg" },
+            { name: "Matcha Frappe", emoji: "🥤", price: 179, category: "drinks", image: "images/Matcha Frappe.jpg" },
+            { name: "Matcha Latte", emoji: "🍵", price: 149, category: "drinks", image: "images/Matcha Latte.jpg" },
+            { name: "Matcha Milk Tea (with Pearls)", emoji: "🧋", price: 159, category: "drinks", image: "images/Matcha Milk Tea With Pearls.jpg" },
+
+            /* DESSERT */
+            { name: "Chocolate Cake", emoji: "🍫", price: 159, category: "dessert", image: "images/Chocolate Cake.jpg" },
+            { name: "Cheesecake", emoji: "🍰", price: 169, category: "dessert", image: "images/classic-cheesecake-recipe.jpg" },
+            { name: "Ice Cream", emoji: "🍨", price: 99, category: "dessert", image: "images/Ice Cream.jpg" },
+            { name: "Churros", emoji: "🥖", price: 139, category: "dessert", image: "images/Churros.jpg" },
+            { name: "Donut", emoji: "🍩", price: 89, category: "dessert", image: "images/Donut.jpg" },
+            { name: "Matcha Ice Cream", emoji: "🍦", price: 109, category: "dessert", image: "images/Matcha Ice Cream.jpg" }
+        ];
+
+        // Screen Transitions
+        startButton.addEventListener("click", () => {
+            startScreen.style.display = "none";
+            questionScreen.style.display = "flex";
+        });
+
+        yesButton.addEventListener("click", () => {
+            questionScreen.style.display = "none";
+            menuScreen.style.display = "flex";
+            renderFoodGrid("all");
+        });
+
+        noButton.addEventListener("click", () => {
+            noCount++;
+            if (noCount < questions.length) {
+                question.textContent = questions[noCount];
+                const areaWidth = buttonArea.clientWidth - noButton.clientWidth;
+                const areaHeight = buttonArea.clientHeight - noButton.clientHeight;
+                const randomX = Math.floor(Math.random() * areaWidth);
+                const randomY = Math.floor(Math.random() * areaHeight);
+                noButton.style.left = randomX + "px";
+                noButton.style.top = randomY + "px";
+            } else {
+                question.textContent = "Okay fine, you have no choice anymore. 👑";
+                noButton.style.display = "none";
+            }
+        });
+
+        function renderFoodGrid(category) {
+            foodGrid.innerHTML = "";
+            const filteredFoods = category === "all" ? foods : foods.filter(item => item.category === category);
+
+            filteredFoods.forEach(item => {
+                const isSelected = selectedItems.some(i => i.name === item.name);
+                const foodCard = document.createElement("div");
+                foodCard.className = `food-item ${isSelected ? 'selected' : ''}`;
+                
+                foodCard.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="food-image" onerror="this.src='https://via.placeholder.com/150?text=Food+Image'">
+                    <div class="food-name">${item.emoji} ${item.name}</div>
+                    <div class="food-price">₱${item.price}</div>
+                `;
+
+                foodCard.addEventListener("click", () => toggleSelectFood(item, foodCard));
+                foodGrid.appendChild(foodCard);
+            });
+        }
+
+        function showCategory(category, buttonElement) {
+            document.querySelectorAll(".category-button").forEach(btn => btn.classList.remove("active"));
+            buttonElement.classList.add("active");
+            renderFoodGrid(category);
+        }
+
+        function toggleSelectFood(item, element) {
+            const index = selectedItems.findIndex(i => i.name === item.name);
+            if (index > -1) {
+                selectedItems.splice(index, 1);
+                element.classList.remove("selected");
+            } else {
+                selectedItems.push(item);
+                element.classList.add("selected");
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            if (selectedItems.length === 0) {
+                cartItems.textContent = "Nothing yet...";
+                cartTotal.textContent = "Total items: 0";
+            } else {
+                cartItems.textContent = selectedItems.map(i => i.name).join(", ");
+                const total = selectedItems.reduce((sum, i) => sum + i.price, 0);
+                cartTotal.textContent = `Total items: ${selectedItems.length} (₱${total})`;
+            }
+        }
+
+        checkoutButton.addEventListener("click", () => {
+            if (selectedItems.length === 0) {
+                alert("Your Highness must select at least one item! 👑");
+                return;
+            }
+
+            menuScreen.style.display = "none";
+            checkoutScreen.style.display = "flex";
+
+            orderList.innerHTML = "";
+            let total = 0;
+
+            selectedItems.forEach(item => {
+                total += item.price;
+                const row = document.createElement("div");
+                row.className = "order-row";
+                row.innerHTML = `<span>${item.emoji} ${item.name}</span> <span>₱${item.price}</span>`;
+                orderList.appendChild(row);
+            });
+
+            checkoutTotal.textContent = `Total Amount: ₱${total}`;
+        });
+
+        confirmButton.addEventListener("click", () => {
+            checkoutScreen.style.display = "none";
+            finalScreen.style.display = "flex";
+        });
+    </script>
+</body>
+
+</html>
